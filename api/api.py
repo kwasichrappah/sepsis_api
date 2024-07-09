@@ -27,7 +27,7 @@ def status_check():
 	return {"Status": "API is online!!!"}
 
 
-pipeline = joblib.load('./models/best_gs_model.joblib')
+#pipeline = joblib.load('./models/best_gs_model.joblib')
 #encoder = joblib.load('')
 
 @app.post("/prediction")
