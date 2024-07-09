@@ -4,6 +4,9 @@ import joblib
 import pandas as pd
 from pydantic import BaseModel
 
+
+
+
 '''to run the API, run this line which is based on the api directory then 'uvicorn api(api python file):app(instance of fast API) --reload' '''
 # Create a FastAPI application
 app = FastAPI()
@@ -24,13 +27,14 @@ def status_check():
 	return {"Status": "API is online!!!"}
 
 
-pipeline = joblib.load('C:\\Users\\chrap\\OneDrive - ECG Ghana\\Emmanuel Chrappah\\Azubi Africa\\git_hub_repos\\sepsis_ml_predictor\\models\\best_gs_model.joblib')
+pipeline = joblib.load('./models/best_gs_model.joblib')
 #encoder = joblib.load('')
 
 @app.post("/prediction")
 def predict_sepssis(data:patient_features):
 
     df = pd.DataFrame([data.model_dump()])
-    pipeline.predict(df)
+    #pipeline.predict(df)
 
 	#return {"All docus": "API Documentation"}
+
