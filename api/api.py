@@ -1,22 +1,13 @@
 from fastapi import FastAPI
 # from typing import Union
-
-#Filter warnings
-import warnings
-warnings.filterwarnings('ignore')
-
 import joblib
 import pandas as pd
 from pydantic import BaseModel
 
-import pickle
-
-#favorite_color = pickle.load( open( "./api/best_gs_model.pkl", "rb" ) )
 
 
+xgb_pipeline = joblib.load(r"..//models//best_gs_model.joblib")
 
-pipeline = joblib.load(r"..//api//best_gs_model.joblib")
-#print(pipeline)
 # # #encoder = joblib.load('')
 
 
@@ -32,7 +23,8 @@ class patient_features(BaseModel):
 	TS :float
 	M11 :float
 	BD2 :float
-	Age :int
+	Age :float
+	Insurance : int
 
 # Define a route at the root web address ("/")
 @app.get("/")
@@ -42,11 +34,16 @@ def status_check():
 
 
 
-@app.post("/prediction")
+@app.post("/xgb_model")
 def predict_sepssis(data:patient_features):
 
     df = pd.DataFrame([data.model_dump()])
-    #pipeline.predict(df)
+    xgb_pipeline.predict(df)
+    prediction = (xgb_pipeline[0])
+    pred_proba = xgb_pipeline.predict_proba(df)[0].tolist()
 
-	#return {"All docus": "API Documentation"}
+    return {
+		'prediction' : prediction,
+		"prediction probability" : pred_proba
+	}
 
