@@ -5,7 +5,7 @@ import pandas as pd
 from pydantic import BaseModel
 
 
-pipeline = joblib.load('C:\\Users\chrap\OneDrive - ECG Ghana\Emmanuel Chrappah\Azubi Africa\git_hub_repos\sepsis_api\models\\best_gs_model.joblib')
+pipeline = joblib.load('./models/best_gs_model.joblib')
 #encoder = joblib.load('')
 
 '''to run the API, run this line which is based on the api directory then 'uvicorn api(api python file):app(instance of fast API) --reload' '''
