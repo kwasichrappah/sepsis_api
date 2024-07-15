@@ -7,7 +7,7 @@ services:
       - '80:80'
   client:
     build:
-      context: './frontend'
+      context: ./sepsis_ml_predictor/frontend
     ports:
       - '8501:8501'
 

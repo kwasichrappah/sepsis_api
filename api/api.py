@@ -6,8 +6,7 @@ from pydantic import BaseModel
 
 
 xgb_pipeline = joblib.load("../models/best_gs_model.joblib")
-
-# # #encoder = joblib.load('')
+encoder = joblib.load('../models/label_encoder.joblib')
 
 
 '''to run the API, run this line which is based on the api directory then 'uvicorn api(api python file):app(instance of fast API) --reload' '''
@@ -38,11 +37,16 @@ def predict_sepssis(data:patient_features):
 
     df = pd.DataFrame([data.model_dump()])
     xgb_pipeline.predict(df)
-    
     prediction = int(prediction[0])
-    #pred_proba = xgb_pipeline.predict_proba(df)[0].tolist()
+    probability = xgb_pipeline.predict_proba(df)
 
-    return {"prediction": prediction}
-		#"predict_proba" : pred_proba
-	
+    prediction = encoder.inverse_transform([prediction])[0]
+ 
+    if prediction == 'Negative':
+            probability= f'{round(probability[0][0], 2)*100}%'
+    else:
+            probability = f'{round(probability[0][1], 2)*100}%'
+ 
+    return {"prediction": prediction, "probability": probability}
+
 
