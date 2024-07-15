@@ -23,8 +23,8 @@ class patient_features(BaseModel):
 	TS :float
 	M11 :float
 	BD2 :float
-	Age :float
-	Insurance : int
+	Age :int
+	Insurance :int
 
 # Define a route at the root web address ("/")
 @app.get("/")
@@ -39,11 +39,10 @@ def predict_sepssis(data:patient_features):
 
     df = pd.DataFrame([data.model_dump()])
     xgb_pipeline.predict(df)
-    prediction = (xgb_pipeline[0])
-    pred_proba = xgb_pipeline.predict_proba(df)[0].tolist()
+    prediction = (xgb_pipeline)
+    #pred_proba = xgb_pipeline.predict_proba(df)[0].tolist()
 
-    return {
-		'prediction' : prediction,
-		"prediction probability" : pred_proba
-	}
+    return prediction
+		#"predict_proba" : pred_proba
+	
 
