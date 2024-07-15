@@ -1,0 +1,14 @@
+version: '3'
+services:
+  api:
+    build: 
+     context: ./api
+    ports:
+      - '80:80'
+  client:
+    build:
+      context: './frontend'
+    ports:
+      - '8501:8501'
+
+

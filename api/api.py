@@ -1,12 +1,11 @@
 from fastapi import FastAPI
-# from typing import Union
 import joblib
 import pandas as pd
 from pydantic import BaseModel
 
 
 
-xgb_pipeline = joblib.load(r"..//models//best_gs_model.joblib")
+xgb_pipeline = joblib.load("../models/best_gs_model.joblib")
 
 # # #encoder = joblib.load('')
 
@@ -23,8 +22,8 @@ class patient_features(BaseModel):
 	TS :float
 	M11 :float
 	BD2 :float
-	Age :int
-	Insurance :int
+	Age :float
+	Insurance :float
 
 # Define a route at the root web address ("/")
 @app.get("/")
@@ -39,10 +38,11 @@ def predict_sepssis(data:patient_features):
 
     df = pd.DataFrame([data.model_dump()])
     xgb_pipeline.predict(df)
-    prediction = (xgb_pipeline)
+    
+    prediction = int(prediction[0])
     #pred_proba = xgb_pipeline.predict_proba(df)[0].tolist()
 
-    return prediction
+    return {"prediction": prediction}
 		#"predict_proba" : pred_proba
 	
 
