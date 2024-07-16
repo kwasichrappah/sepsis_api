@@ -6,6 +6,9 @@ from pydantic import BaseModel
 
 
 xgb_pipeline = joblib.load("../models/best_gs_model.joblib")
+log_pipeline = joblib.load("../models/log_model.joblib")
+svc_pipeline = joblib.load("../models/best_svc_model.joblib")
+catboost_pipeline = joblib.load("../models/best_catboost_model.joblib")
 encoder = joblib.load('../models/label_encoder.joblib')
 
 
@@ -50,3 +53,54 @@ def predict_sepssis(data:patient_features):
     return {"prediction": prediction, "probability": probability}
 
 
+@app.post("/log_model")
+def predict_sepssis(data:patient_features):
+
+    df = pd.DataFrame([data.model_dump()])
+    prediction=log_pipeline.predict(df)
+    prediction = int(prediction[0])
+    probability = xgb_pipeline.predict_proba(df)
+
+    prediction = encoder.inverse_transform([prediction])[0]
+ 
+    if prediction == 'Negative':
+            probability= f'{round(probability[0][0], 2)*100}%'
+    else:
+            probability = f'{round(probability[0][1], 2)*100}%'
+ 
+    return {"prediction": prediction, "probability": probability}
+
+
+@app.post("/svc_model")
+def predict_sepssis(data:patient_features):
+
+    df = pd.DataFrame([data.model_dump()])
+    prediction=svc_pipeline.predict(df)
+    prediction = int(prediction[0])
+    probability = xgb_pipeline.predict_proba(df)
+
+    prediction = encoder.inverse_transform([prediction])[0]
+ 
+    if prediction == 'Negative':
+            probability= f'{round(probability[0][0], 2)*100}%'
+    else:
+            probability = f'{round(probability[0][1], 2)*100}%'
+ 
+    return {"prediction": prediction, "probability": probability}
+
+@app.post("/catboost_model")
+def predict_sepssis(data:patient_features):
+
+    df = pd.DataFrame([data.model_dump()])
+    prediction=catboost_pipeline.predict(df)
+    prediction = int(prediction[0])
+    probability = xgb_pipeline.predict_proba(df)
+
+    prediction = encoder.inverse_transform([prediction])[0]
+ 
+    if prediction == 'Negative':
+            probability= f'{round(probability[0][0], 2)*100}%'
+    else:
+            probability = f'{round(probability[0][1], 2)*100}%'
+ 
+    return {"prediction": prediction, "probability": probability}
