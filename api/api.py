@@ -36,7 +36,7 @@ def status_check():
 def predict_sepssis(data:patient_features):
 
     df = pd.DataFrame([data.model_dump()])
-    xgb_pipeline.predict(df)
+    prediction=xgb_pipeline.predict(df)
     prediction = int(prediction[0])
     probability = xgb_pipeline.predict_proba(df)
 
